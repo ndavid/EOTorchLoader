@@ -35,6 +35,7 @@ jobs:
           pip3 install pydata-sphinx-theme
 
       - name: "Build Sphinx Doc"
+        working-directory: ./docs/
         run: |
           make html
 
@@ -45,4 +46,4 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages     # <- Branche sur laquelle seront commités les fichiers
-          FOLDER: build/html/  # <- Dossier contenant notre documentation générée
+          FOLDER: docs/build/html/  # <- Dossier contenant notre documentation générée
