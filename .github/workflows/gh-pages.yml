@@ -1,0 +1,48 @@
+# Workflow name
+name: "Build and deploy Github pages"
+
+# Event that must trigger the workflow
+on:
+  push:         # <- trigger when we call push
+    branches:
+      - main  # <- but only on mian branch
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    # Task to do when launching the workflow
+    steps:
+
+      # 1. First get the repository source
+
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      # 2. Sphinx part : install tool and dependencies
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: "Install Python dependencies"
+        run: |
+          pip3 install setuptools
+          pip3 install pydata-sphinx-theme
+
+      - name: "Build Sphinx Doc"
+        run: |
+          make html
+
+      # 3. Déploiement sur les Github Pages
+
+      - name: "Deploy Github Pages"
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages     # <- Branche sur laquelle seront commités les fichiers
+          FOLDER: build/html/  # <- Dossier contenant notre documentation générée
