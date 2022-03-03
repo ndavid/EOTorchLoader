@@ -151,7 +151,7 @@ static
 .project
 .pydevproject
 .settings
-.idea 
+.idea
 
 # Hydra
 outputs/

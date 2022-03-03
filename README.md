@@ -5,5 +5,5 @@ ______________________________________________________________________
 ## EOTorchLoader is pytorch datamodule for EO Imagery
 
    module to load earth observation data and benchmark dataset into pytorch lightning datamodule and datasets
-   
+
    !! EARLY WORK In PROGRESS !!
