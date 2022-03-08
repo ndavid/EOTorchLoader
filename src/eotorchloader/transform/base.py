@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from typing import Any, Callable, Dict, List, Sequence, Tuple, Optional
+import numpy as np
 
 
 def format_to_dict(image: np.ndarray, mask: np.ndarray) -> Dict[str, Any]:

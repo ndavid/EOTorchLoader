@@ -17,6 +17,11 @@ from typing import Any, Callable, Dict, List, Sequence, Tuple, Optional
 
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
+import rasterio
+import random
+
+from ..backend.rasterio import geoimage_load_tile
+from ..transform.base import format_to_dict
 
 
 def get_nb_tile_from_img(img_shape: Tuple[int, int], tile_size: int) -> int:

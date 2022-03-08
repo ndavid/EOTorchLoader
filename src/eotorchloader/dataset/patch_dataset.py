@@ -13,6 +13,8 @@
 # limitations under the License.
 import torch
 from torch.utils.data import Dataset, DataLoader
+from ..backend.rasterio import geoimage_simple_load
+from ..transform.base import format_to_dict
 
 
 class PatchDataset(Dataset):

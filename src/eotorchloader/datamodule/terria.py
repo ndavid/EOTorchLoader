@@ -11,7 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import Any, Callable, Dict, List, Sequence, Tuple, Optional
+from torch.utils.data import DataLoader
 import pytorch_lightning as pl
+from ..dataset.scene_dataset import LargeImageDataset
 
 
 class TerriaDataModule(pl.LightningDataModule):
@@ -33,7 +36,7 @@ class TerriaDataModule(pl.LightningDataModule):
         self.num_workers = 2
 
         self.transform = transforms
-        self.image_bands = image_bands
+        self.image_bands = img_bands
         self.mask_band = mask_bands
 
         self.data_df = data_df
@@ -85,7 +88,7 @@ class TerriaDataModule(pl.LightningDataModule):
             test_df = self.data_df[self.data_df[self.group_col].isin(test_config)]
             image_files_test = test_df[self.img_col].values
             mask_files_test = test_df[self.mask_col].values
-            self.val_dataset = LargeImageDataset(
+            self.test_dataset = LargeImageDataset(
                 image_files=image_files_test,
                 mask_files=mask_files_test,
                 tile_size=self.tile_size,
