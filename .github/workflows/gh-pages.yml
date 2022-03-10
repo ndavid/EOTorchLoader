@@ -33,6 +33,8 @@ jobs:
         run: |
           pip3 install setuptools
           pip3 install pydata-sphinx-theme
+          pip3 install sphinx-panels
+          pip3 install nbsphinx
 
       - name: "Build Sphinx Doc"
         working-directory: ./docs/
