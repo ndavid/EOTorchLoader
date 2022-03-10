@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Installation &#8212; EOTorchLoader 0.1 documentation</title>
+    <title>Installation Guide &#8212; EOTorchLoader 0.1 documentation</title>
     
     <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 <link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -39,7 +39,8 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation Guide" href="installation.html" />
+    <link rel="next" title="Getting started" href="getting_started/index.html" />
+    <link rel="prev" title="Installation" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -57,7 +58,7 @@
   <div id="navbar-start">
     
     
-<a class="navbar-brand" href="#">
+<a class="navbar-brand" href="index.html">
 <p class="title">EOTorchLoader</p>
 </a>
 
@@ -74,8 +75,8 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="installation.html">
+    <li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
   Installation Guide
  </a>
 </li>
@@ -154,9 +155,63 @@
               
               <div class="toc-item">
                 
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#python-version-support">
+   Python version support
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installing-eotorchloader">
+   Installing EOTorchLoader
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-pypi">
+     From PyPI
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-conda-forge">
+     From conda-forge
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-github">
+     From GitHub
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#option-1-as-a-part-of-your-system-wide-module">
+       Option 1 (as a part of your system-wide module):
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#option-2-editable-installation">
+       Option 2 (editable installation):
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#validating-the-install">
+   Validating the install
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dependencies">
+   Dependencies
+  </a>
+ </li>
+</ul>
+
 </nav>
               </div>
               
@@ -176,124 +231,58 @@
               
               <div>
                 
-  <span class="target" id="eotorchloader-doc"></span><p><strong>Date</strong>: 03/2022 <strong>Version</strong>: 0.1</p>
-<p><strong>Useful links</strong>:
-<a class="reference external" href="https://github.com/ndavid/EOTorchLoader">Source Repository</a> |
-<a class="reference external" href="https://github.com/ndavid/EOTorchLoader/issues">Issues &amp; Ideas</a> |</p>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">EOTorchLoader</span></code> is an open source, Apache-2.0 library providing,
-easy-to-use data structures for using Earth Observation imagery data
-with pytorch and pytorch-lightning deep learning framework.</p>
-<div class="sphinx-bs container pb-4 docutils">
-<div class="row docutils">
-<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 docutils">
-<div class="card w-100 shadow intro-card text-center docutils">
-<img alt="img-top" class="card-img-top" src="_images/index_getting_started.svg" /><div class="card-header docutils">
-<p class="card-text">Getting started</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">New to <em>EOTorchLoader</em>? Check out the getting started guides. They contain an
-introduction to <em>EOTorchLoader’</em> main concepts and links to additional tutorials.</p>
-</div>
-<div class="card-footer docutils">
-<p class="card-text"><a class="sphinx-bs btn text-wrap btn-block btn-secondary stretched-link reference internal" href="getting_started/index.html#getting-started"><span class="std std-ref">To the getting started guides</span></a></p>
-</div>
-</div>
-</div>
-<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 docutils">
-<div class="card w-100 shadow intro-card text-center docutils">
-<img alt="img-top" class="card-img-top" src="_images/index_user_guide.svg" /><div class="card-header docutils">
-<p class="card-text">User guide</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">The user guide provides in-depth information on the
-key concepts of EOTorchLoader with useful background information and explanation.</p>
-</div>
-<div class="card-footer docutils">
-<p class="card-text"><a class="sphinx-bs btn text-wrap btn-block btn-secondary stretched-link reference internal" href="user_guide/index.html#user-guide"><span class="std std-ref">To the user guide</span></a></p>
-</div>
-</div>
-</div>
-<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 docutils">
-<div class="card w-100 shadow intro-card text-center docutils">
-<img alt="img-top" class="card-img-top" src="_images/index_api.svg" /><div class="card-header docutils">
-<p class="card-text">API reference</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">The reference guide contains a detailed description of
-the EOTorchLoader API. The reference describes how the methods work and which parameters can
-be used. It assumes that you have an understanding of the key concepts.</p>
-</div>
-<div class="card-footer docutils">
-<p class="card-text"><a class="sphinx-bs btn text-wrap btn-block btn-secondary stretched-link reference internal" href="reference/index.html#api"><span class="std std-ref">To the reference guide</span></a></p>
-</div>
-</div>
-</div>
-<div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 docutils">
-<div class="card w-100 shadow intro-card text-center docutils">
-<img alt="img-top" class="card-img-top" src="_images/index_contribute.svg" /><div class="card-header docutils">
-<p class="card-text">Developer guide</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">Guide to install develop environnment and documentation
-for architecture decision and analysis of existing librairies
-on deep learning and earth observation/geomatic datas.</p>
-</div>
-<div class="card-footer docutils">
-<p class="card-text"><a class="sphinx-bs btn text-wrap btn-block btn-secondary stretched-link reference internal" href="development/index.html#development"><span class="std std-ref">To the development guide</span></a></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="sphinx-bs container pb-4 docutils">
-<div class="row docutils">
-<div class="d-flex col-lg-6 col-md-6 col-sm-12 col-xs-12 p-3 docutils">
-<div class="card w-100 shadow install-card docutils">
-<div class="card-header docutils">
-<p class="card-text">Working with conda?</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">Not done YET</p>
-</div>
-<div class="card-footer docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install xx
+  <section id="installation-guide">
+<span id="installation"></span><h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
+<section id="python-version-support">
+<h2>Python version support<a class="headerlink" href="#python-version-support" title="Permalink to this headline">¶</a></h2>
+<p>Officially Python 3.8, 3.9 and 3.10.</p>
+</section>
+<section id="installing-eotorchloader">
+<h2>Installing EOTorchLoader<a class="headerlink" href="#installing-eotorchloader" title="Permalink to this headline">¶</a></h2>
+<section id="from-pypi">
+<h3>From PyPI<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h3>
+<p>TODO no packaging done yet</p>
+</section>
+<section id="from-conda-forge">
+<h3>From conda-forge<a class="headerlink" href="#from-conda-forge" title="Permalink to this headline">¶</a></h3>
+<p>TODO no packaging done yet</p>
+</section>
+<section id="from-github">
+<h3>From GitHub<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h3>
+<section id="option-1-as-a-part-of-your-system-wide-module">
+<h4>Option 1 (as a part of your system-wide module):<a class="headerlink" href="#option-1-as-a-part-of-your-system-wide-module" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/ndavid/EOTorchLoader#egg<span class="o">=</span>eotorchloader
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-<div class="d-flex col-lg-6 col-md-6 col-sm-12 col-xs-12 p-3 docutils">
-<div class="card w-100 shadow install-card docutils">
-<div class="card-header docutils">
-<p class="card-text">Prefer pip?</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">Not done YET</p>
-</div>
-<div class="card-footer docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install xx
+</section>
+<section id="option-2-editable-installation">
+<h4>Option 2 (editable installation):<a class="headerlink" href="#option-2-editable-installation" title="Permalink to this headline">¶</a></h4>
+<p>To install an editable version of EOTorchLoader, it is recommended to clone the codebase directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/ndavid/EOTorchLoader.git
 </pre></div>
 </div>
+<p>This command will create a <code class="docutils literal notranslate"><span class="pre">EOTorchLoader/</span></code> folder in your current directory.
+You can install it by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> EOTorchLoader/
+pip install --editable .
+</pre></div>
 </div>
+<p>To uninstall the package please run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip uninstall eotorchloader
+</pre></div>
 </div>
-</div>
-<div class="d-flex col-12 p-3 docutils">
-<div class="card w-100 shadow install-card docutils">
-<div class="card-header docutils">
-<p class="card-text">In-depth instructions?</p>
-</div>
-<div class="card-body docutils">
-<p class="card-text">Installing from source? Check the advanced installation page.</p>
-<p class="card-text"><a class="sphinx-bs btn text-wrap btn-secondary stretched-link reference external" href="./installation.html"><span>Learn more</span></a></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="toctree-wrapper compound">
-</div>
+<p>Alternatively, simply adding the root directory of the cloned source code (e.g., <code class="docutils literal notranslate"><span class="pre">/workspace/Documents/EOTorchLoader/src</span></code>) to your <code class="docutils literal notranslate"><span class="pre">$PYTHONPATH</span></code>
+and the codebase is ready to use.</p>
+</section>
+</section>
+</section>
+<section id="validating-the-install">
+<h2>Validating the install<a class="headerlink" href="#validating-the-install" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+</section>
 </section>
 
 
@@ -302,10 +291,17 @@ on deep learning and earth observation/geomatic datas.</p>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="installation.html" title="next page">
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Installation</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="getting_started/index.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Installation Guide</p>
+        <p class="prev-next-title">Getting started</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
