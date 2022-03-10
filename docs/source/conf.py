@@ -73,6 +73,10 @@ html_theme = "pydata_sphinx_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+html_css_files = [
+    "css/getting_started.css",
+    "css/eotorch.css",
+]
 
 html_theme_options = {
     "external_links": [],
