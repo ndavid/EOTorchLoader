@@ -1,4 +1,4 @@
-:notoc:
+.. _EOTorchLoader_doc:
 
 .. EOTorchLoader documentation master file, created by Nicolas DAVID
 
@@ -87,11 +87,58 @@ with pytorch and pytorch-lightning deep learning framework.
             :classes: btn-block btn-secondary stretched-link
 
 
+Installation
+------------
+
+.. panels::
+    :card: + install-card
+    :column: col-lg-6 col-md-6 col-sm-12 col-xs-12 p-3
+
+    Working with conda?
+    ^^^^^^^^^^^^^^^^^^^
+
+    Not done YET
+
+    ++++++++++++++++++++++
+
+    .. code-block:: bash
+
+        conda install xx
+
+    ---
+
+    Prefer pip?
+    ^^^^^^^^^^^
+
+    Not done YET
+
+
+    ++++
+
+    .. code-block:: bash
+
+        pip install xx
+
+    ---
+    :column: col-12 p-3
+
+    In-depth instructions?
+    ^^^^^^^^^^^^^^^^^^^^^^
+
+    Installing from source? Check the advanced installation page.
+
+    .. link-button:: ./installation.html
+        :type: url
+        :text: Learn more
+        :classes: btn-secondary stretched-link
+
+
 .. toctree::
    :maxdepth: 3
    :hidden:
    :titlesonly:
 
+   installation
    getting_started/index
    user_guide/index
    reference/index
