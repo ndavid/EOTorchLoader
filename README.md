@@ -1,8 +1,8 @@
 EOTorchLoader: aerial and satellite imagery datamodule for pytorch
 ====================================================================
 
-.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
-   :target: https://github.com/ndavid/EOTorchLoader/blob/main/LICENSE
+[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)]
+(https://github.com/PytorchLightning/pytorch-lightning/blob/master/LICENSE)
 
 
 **EOTorchLoader** is an open source project and Python package
