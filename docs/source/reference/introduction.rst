@@ -3,7 +3,7 @@
 Introduction
 ============
 
-.. currentmodule:: eotrochloader
+.. currentmodule:: eotorchloader
 
 The structure of EOTorchLoader can be seen by the organization of its source code.
 The package provides classes for dataset|datapipe, datamodule and transoform object.

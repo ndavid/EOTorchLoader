@@ -11,5 +11,4 @@ API reference
    :maxdepth: 2
 
    introduction
-   dataset/index
-   utils
+   dataset
