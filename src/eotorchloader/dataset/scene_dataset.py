@@ -25,14 +25,50 @@ from ..transform.base import format_to_dict
 
 
 def get_nb_tile_from_img(img_shape: Tuple[int, int], tile_size: int) -> int:
-    """ """
+    """
+    return the number of tile inside an image
+
+    currently the number of tile are computed without overlaping and by rounding
+    so union of all tiles are smaller than image.
+    Tile are square.
+
+    Parameters
+    ----------
+    img_shape : Tuple[int, int]
+        shape of the image in pixel, similar to numpy array shape.
+    tile_size : int
+        size of the tile to extract in pixel. size in all dimension are the same.
+
+    Returns
+    -------
+    int :
+       number of tile.
+    """
     nb_tile_col = img_shape[0] // tile_size
     nb_tile_row = img_shape[1] // tile_size
     return nb_tile_col * nb_tile_row
 
 
 def get_img_windows_list(img_shape: Tuple[int, int], tile_size: int):
-    """ """
+    """
+    return list of tiles coordinate inside an image
+
+    currently the tile are computed without overlaping and by rounding
+    so union of all tiles are smaller than image.
+    Tile are square.
+
+    Parameters
+    ----------
+    img_shape : Tuple[int, int]
+        shape of the image in pixel, similar to numpy array shape.
+    tile_size : int
+        size of the tile to extract in pixel. size in all dimension are the same.
+
+    Returns
+    -------
+    List[Tuple(int, int, int, int)] :
+       List of tile pixel coordinate as a tuple with row/col min and row/col max.
+    """
     col_step = [col for col in range(0, img_shape[0], tile_size)]
     col_step.append(img_shape[0])
     row_step = [row for row in range(0, img_shape[1], tile_size)]
@@ -65,6 +101,33 @@ class LargeImageDataset(Dataset):
         image_bands=None,
         mask_bands=None,
     ):
+        """
+        Pytorch dataset to load image/mask samples from list of Large image files.
+
+        The images and masks are tiled "online" during the extraction of data.
+        Parameters are the same as PatchDataset but with a supplementar tile_size
+        parameter to configure tiling.
+
+        Parameters
+        ----------
+        image_files : Path
+            List of image path
+        mask_files : List[str]
+            list of mask/fround truth path. Must be of same size than image_files and
+            with sample in the same order.
+        tile_size : Int
+            size of the tile in pixel.
+        transforms : List[BasicTransform]
+            list of transform to apply to the sample (image, mask). No defaut transform
+            are apply if None.
+        image_bands : List[Int]
+            list of bands to read/extract from image file. If none all band are read.
+            follow rasterio convention and ordering begin to one
+        mask_bands : List[Int]
+            list of bands to read/extract from mask file. If none all band are read.
+            follow rasterio convention and ordering begin to one
+
+        """
         self.image_files = image_files
         self.image_bands = image_bands
         self.tile_size = tile_size

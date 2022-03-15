@@ -26,6 +26,31 @@ class PatchDataset(Dataset):
         image_bands=None,
         mask_bands=None,
     ):
+        """
+        Pytorch dataset to load image/mask samples from list of files.
+
+        By default the images are fully loaded in memory before applying transform.
+        If image are too big this could lead to memory issues. This dataset should
+        be used with small image files (pretiled/precropped training dataset)
+
+        Parameters
+        ----------
+        image_files : Path
+            List of image path
+        mask_files : List[str]
+            list of mask/fround truth path. Must be of same size than image_files and
+            with sample in the same order.
+        transforms : List[BasicTransform]
+            list of transform to apply to the sample (image, mask). No defaut transform
+            are apply if None.
+        image_bands : List[Int]
+            list of bands to read/extract from image file. If none all band are read.
+            follow rasterio convention and ordering begin to one
+        mask_bands : List[Int]
+            list of bands to read/extract from mask file. If none all band are read.
+            follow rasterio convention and ordering begin to one
+
+        """
         self.image_files = image_files
         self.image_bands = image_bands
         self.mask_files = mask_files
