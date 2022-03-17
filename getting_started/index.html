@@ -25,6 +25,7 @@
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/getting_started.css" />
@@ -36,6 +37,7 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/tabs.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -162,8 +164,13 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#installation">
-   Installation
+  <a class="reference internal nav-link" href="#get-some-eo-data">
+   Get some EO data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prepair-dataframe-with-eo-metadata">
+   Prepair dataframe with EO metadata
   </a>
  </li>
 </ul>
@@ -189,8 +196,51 @@
                 
   <section id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Welcome to the getting started with <strong>EOTorchLoader</strong> tutorial!</p>
+<p>This tutorial assumes you have already installed EOTorchLoader.
+For help with installation see our <a class="reference internal" href="../installation.html#installation"><span class="std std-ref">installation tutorial</span></a>.</p>
+<p>This tutorial will teach you all the more common way to use EOTorchLoader in
+you pytorch/pytorch lighningt training code.
+At the end of the tutorial you should be able to use EOTorchLoader for loading
+standard EO imagery in a pytroch deep learning training loop.</p>
+<section id="get-some-eo-data">
+<h2>Get some EO data<a class="headerlink" href="#get-some-eo-data" title="Permalink to this headline">¶</a></h2>
+<p>We first need some Earth Observation data, in this tutorial we will use two
+common benchmark dataset in remote sensing which are <em>small</em> to speed up a little
+this tutorial. Theses dataset are :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.isprs.org/education/benchmarks/UrbanSemLab/2d-sem-label-potsdam.aspx">ISPRS 2D Semantic Labeling Contest - Potsdam</a></p></li>
+<li><p><a class="reference external" href="https://project.inria.fr/aerialimagelabeling/">The INRIA Aerial Image Labeling Dataset</a></p></li>
+</ul>
+<p>If you had not already download the data, use the following instruction :</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">ISPRS Potsdam</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">INRIA</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>the postdam data could be downloaded from the dedicated <a class="reference external" href="https://seafile.projekt.uni-hannover.de/f/429be50cc79d423ab6c4/">ISRPS page</a>
+with password CjwcipT4-P8g</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p EOData/ISPRS/Potsdam
+<span class="nb">cd</span> EOData/ISPRS/Potsdam
+wget <span class="k">$(</span>curl --silent https://seafile.projekt.uni-hannover.de/api2/f/429be50cc79d423ab6c4/ <span class="p">|</span> tr -d <span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
+unzip -j Potsdam.zip <span class="s2">&quot;Potsdam/4_Ortho_RGBIR.zip&quot;</span> -d .
+unzip -j Potsdam.zip <span class="s2">&quot;Potsdam/5_Labels_all.zip&quot;</span> -d .
+unzip 4_Ortho_RGBIR.zip
+unzip 5_Labels_all.zip -d 5_Labels_all
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>The data could be donwloaded from the <a class="reference external" href="https://project.inria.fr/aerialimagelabeling/files/">INIRA site</a> or directly
+from terminal</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p EOData/INRIA
+<span class="nb">cd</span> EOData/INRIA
+curl -k https://files.inria.fr/aerialimagelabeling/getAerial.sh <span class="p">|</span> bash
+rm .7z.00*
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="prepair-dataframe-with-eo-metadata">
+<h2>Prepair dataframe with EO metadata<a class="headerlink" href="#prepair-dataframe-with-eo-metadata" title="Permalink to this headline">¶</a></h2>
+<p>In EOTorchLoader the path of image and mask data are set outside EoTorchLoader Datapipe and Datamodule
+and should be defined by the user.
+The prefered way for this is to construct a Pandas Dataframe with all informations
+for an (image, mask) sample on each row of the dataframe.</p>
 </section>
 </section>
 
