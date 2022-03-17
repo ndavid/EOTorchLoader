@@ -40,6 +40,7 @@ extensions = [
     "sphinx.ext.ifconfig",
     "nbsphinx",
     "sphinx_panels",
+    "sphinx_tabs.tabs",
 ]
 
 # generate autosummary pages
