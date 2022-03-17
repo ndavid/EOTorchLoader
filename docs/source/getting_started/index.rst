@@ -54,6 +54,7 @@ If you had not already download the data, use the following instruction :
          mkdir -p EOData/INRIA
          cd EOData/INRIA
          curl -k https://files.inria.fr/aerialimagelabeling/getAerial.sh | bash
+         rm .7z.00*
 
 
 Prepair dataframe with EO metadata
