@@ -76,7 +76,7 @@ def get_img_windows_list(img_shape: Tuple[int, int], tile_size: int):
 
     windows_list = []
     for i, j in itertools.product(
-        range(0, len(col_step) - 1), range(0, len(row_step) - 1)
+        range(0, len(col_step) - 2), range(0, len(row_step) - 2)
     ):
         windows_list.append(
             tuple(
