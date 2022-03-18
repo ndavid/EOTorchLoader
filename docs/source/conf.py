@@ -13,10 +13,10 @@
 import sys
 import os
 from os.path import abspath, dirname
-
-module_path = os.path.join(abspath(dirname(dirname(dirname(__file__)))), "src")
-print(module_path)
-sys.path.insert(0, module_path)
+from sphinx.domains import Domain
+from typing import Dict, List, Tuple
+from unittest import mock
+from unittest.mock import MagicMock
 
 
 # -- Project information -----------------------------------------------------
@@ -25,8 +25,41 @@ project = "EOTorchLoader"
 copyright = "2022, Nicolas DAVID"
 author = "Nicolas DAVID"
 
+module_path = os.path.join(abspath(dirname(dirname(dirname(__file__)))), "src")
+print(module_path)
+sys.path.insert(0, module_path)
+
 # The full version, including alpha/beta/rc tags
 release = "0.1"
+
+# -- mock dependencies for generation on githb pages etc..
+
+# fmt: off
+try:
+    import torch  # noqa
+except ImportError:
+    for m in [
+        "torch", "torchvision", "torch.nn", "torch.nn.parallel", "torch.distributed", "torch.multiprocessing", "torch.autograd",
+        "torch.autograd.function", "torch.nn.modules", "torch.nn.modules.utils", "torch.utils", "torch.utils.data", "torch.onnx",
+        "torchvision", "torchvision.ops",
+    ]:
+        sys.modules[m] = mock.Mock(name=m)
+    sys.modules['torch'].__version__ = "1.7"  # fake version
+    HAS_TORCH = False
+else:
+    HAS_TORCH = True
+
+for m in [
+    "rasterio", "numpy", "pytorch_lightning", "pandas",
+    "matplotlib.pyplot"
+]:
+    sys.modules[m] = mock.Mock(name=m)
+
+for m in [
+    "rasterio.windows"
+]:
+    sys.modules[m] = mock.MagicMock()
+# fmt: on
 
 
 # -- General configuration ---------------------------------------------------
