@@ -18,7 +18,24 @@ from .base import BasicTransform
 
 class ToRgbDisplay(BasicTransform):
     """
-    scale an input image to float image between [0, 1]
+    Convert (image, mask) sample into compatible RGB format for display purpose
+
+    For the image choose the channel to use as Red, Green, Blue for display, for the mask
+    data an argmax flattening is apply first if needed and then a lut conversion is made
+
+    Note:
+        Input (image, mask) should already be in HWC order and not CHW. To convert
+        from one to another format see ..
+
+    Args:
+        color_compo (str) : Name or color composition to use, if use image channels should
+          be ordered by increasing spectral wavelenght (Blue, Green , Red, Infra-Red)
+        channels_display (List(Int)) : List of channel to use as gray or Red, Green, Blue band
+          if len(channels_display)=1 is for gray mode and len=3 for RGB mode
+        lut (np.array) : numpy array to convert class number to rgb value. If shape is (N, 3) then
+          the array index is use class number if shape is (N, 4) then each is ( Class_Id, R, V, B)
+        flatten_mask (bool) : use an argmax function for mask data before lut conversion.
+
     """
 
     def __init__(
@@ -26,12 +43,9 @@ class ToRgbDisplay(BasicTransform):
         color_compo: str = None,
         channels_display: List[int] = None,
         lut: np.array = None,
+        flatten_mask: bool = True,
     ):
-        """
-
-        channels_display : list of channel to display in r,g,b order if dim 3, channel dto display if dim 1
-        """
-
+        self.flatten = flatten_mask
         super(ToRgbDisplay, self).__init__()
         if color_compo is None and channels_display is None:
             # set rgb as first three channel
@@ -39,7 +53,17 @@ class ToRgbDisplay(BasicTransform):
             self.channels_display = [0, 1, 2]
 
         if lut is not None:
-            self.lut = lut
+            row_size = lut.shape[1]
+            if row_size == 3:
+                self.lut = lut
+            elif row_size == 4:
+                lut_255 = np.zeros((256, 3), dtype=np.uint8)
+                lut_255[lut[:, 0]] = lut[:, 1:4]
+                self.lut = lut_255
+            else:
+                raise ValueError(
+                    f"lut shoulb be of shape [N,3) or (N,4) and not {lut.shape}"
+                )
         else:
             self.lut = None
 
@@ -51,7 +75,10 @@ class ToRgbDisplay(BasicTransform):
         return img
 
     def apply_to_mask(self, mask: np.ndarray) -> np.ndarray:
-        mask = np.argmax(mask, axis=0)
+        if self.flatten:
+            mask = np.argmax(mask, axis=0)
+        if not self.flatten and mask.shape[0] == 1:
+            mask = np.squeeze(mask, axis=0)
         if self.lut is not None:
             # mask = self.lut[mask]
             mask = np.take(self.lut, mask, axis=0)
