@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>ToRgbDisplay &#8212; EOTorchLoader 0.1 documentation</title>
+    <title>load_geo_img_dir &#8212; EOTorchLoader 0.1 documentation</title>
     
     <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -40,8 +40,8 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Development" href="../../development/index.html" />
-    <link rel="prev" title="Transforms" href="../transform.html" />
+    <link rel="next" title="Transforms" href="../transform.html" />
+    <link rel="prev" title="Dataset" href="../dataset.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -146,35 +146,35 @@
    Introduction
   </a>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="../dataset.html">
    Dataset
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../generated/eotorchloader.dataset.utils.load_geo_img_dir.html">
-     load_geo_img_dir
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="../transform.html">
-   Transforms
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul class="current">
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
+     load_geo_img_dir
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../transform.html">
+   Transforms
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../transform/RgbDisplay.html">
      ToRgbDisplay
     </a>
    </li>
@@ -197,19 +197,9 @@
               
               <div class="toc-item">
                 
-<div class="tocsection onthispage pt-5 pb-3">
-    <i class="fas fa-list"></i> On this page
-</div>
 
 <nav id="bd-toc-nav">
-    <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#overview">
-   Overview
-  </a>
- </li>
-</ul>
-
+    
 </nav>
               </div>
               
@@ -229,37 +219,57 @@
               
               <div>
                 
-  <section id="torgbdisplay">
-<span id="to-rgb-display"></span><h1>ToRgbDisplay<a class="headerlink" href="#torgbdisplay" title="Permalink to this headline">¶</a></h1>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="eotorchloader.transform.display.ToRgbDisplay">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ToRgbDisplay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_compo:</span> <span class="pre">typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels_display:</span> <span class="pre">typing.Optional[typing.List[int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lut:</span> <span class="pre">typing.Optional[&lt;Mock</span> <span class="pre">name='numpy.array'</span> <span class="pre">id='140396595566768'&gt;]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_mask:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eotorchloader.transform.display.ToRgbDisplay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert (image, mask) sample into compatible RGB format for display purpose</p>
-<p>For the image choose the channel to use as Red, Green, Blue for display, for the mask
-data an argmax flattening is apply first if needed and then a lut conversion is made</p>
+  <section id="load-geo-img-dir">
+<h1>load_geo_img_dir<a class="headerlink" href="#load-geo-img-dir" title="Permalink to this headline">¶</a></h1>
+<p>Module : eotorchloader.dataset.utils</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="eotorchloader.dataset.utils.load_geo_img_dir">
+<span class="sig-name descname"><span class="pre">load_geo_img_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_suffix_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['.tif',</span> <span class="pre">'.jp2']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;Mock</span> <span class="pre">name='pandas.DataFrame'</span> <span class="pre">id='140396601108752'&gt;</span></span></span><a class="headerlink" href="#eotorchloader.dataset.utils.load_geo_img_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>list info/metadata of images from a directory into a dataframe</p>
+<p>list all images which are in a img_dir and with suffix present in img_suffix_list.
+All image are open with rasterio to load their geographic metadata and all the informations
+are written in a pandas Dataframe with one row by image and with columns :</p>
+<ul class="simple">
+<li><p>“name” : name (str) of the image without extension</p></li>
+<li><p>“path” : full path of the image (dir+name+extension)</p></li>
+<li><p>“width” : width of the image in pixel (int)</p></li>
+<li><p>“height” : height of the image in pixel (int)</p></li>
+<li><p>“res_x” : resolution in x axis (float)</p></li>
+<li><p>“res_y” : resolution in y axis (float)</p></li>
+<li><p>“ul_x” : upper left coordinate of the image in x axis (float)</p></li>
+<li><p>“ul_y” : upper left coordinate of the image in y axis (float)</p></li>
+<li><p>“transform” : full affine transform to convert from pixel coordinate to grund coordinate.
+follow the rasterio convention.</p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Input (image, mask) should already be in HWC order and not CHW. To convert
-from one to another format see ..</p>
+<p>The rasterio transform convention is :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">transform</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">resolution</span><span class="o">/</span><span class="n">scale</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">rotation</span> <span class="n">row</span><span class="o">/</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">upper_left</span><span class="o">/</span><span class="n">origin</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">rotation</span> <span class="n">col</span><span class="o">/</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">/</span><span class="n">scale</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">upper_left</span><span class="o">/</span><span class="n">origin</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>color_compo</strong> (<em>str</em>) – Name or color composition to use, if use image channels should
-be ordered by increasing spectral wavelenght (Blue, Green , Red, Infra-Red)</p></li>
-<li><p><strong>channels_display</strong> (<em>List</em><em>(</em><em>Int</em><em>)</em>) – List of channel to use as gray or Red, Green, Blue band
-if len(channels_display)=1 is for gray mode and len=3 for RGB mode</p></li>
-<li><p><strong>lut</strong> (<em>np.array</em>) – numpy array to convert class number to rgb value. If shape is (N, 3) then
-the array index is use class number if shape is (N, 4) then each is ( Class_Id, R, V, B)</p></li>
-<li><p><strong>flatten_mask</strong> (<em>bool</em>) – use an argmax function for mask data before lut conversion.</p></li>
+<li><p><strong>img_dir</strong> (<em>Path</em>) – Path of the directory where images will be search</p></li>
+<li><p><strong>img_suffix_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of image extension to filter files in img_dir.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pandas dataframe with a row by images. empty if no images found</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
 
-</section>
 </section>
 
 
@@ -268,17 +278,17 @@ the array index is use class number if shape is (N, 4) then each is ( Class_Id, 
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../transform.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="../dataset.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Transforms</p>
+            <p class="prev-next-title">Dataset</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../../development/index.html" title="next page">
+    <a class='right-next' id="next-link" href="../transform.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Development</p>
+        <p class="prev-next-title">Transforms</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

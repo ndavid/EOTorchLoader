@@ -1,0 +1,8 @@
+﻿load\_geo\_img\_dir
+===================
+
+Module : eotorchloader.dataset.utils
+
+.. currentmodule:: eotorchloader.dataset.utils
+
+.. autofunction:: load_geo_img_dir
