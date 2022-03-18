@@ -38,13 +38,15 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.mathjax",
     "sphinx.ext.ifconfig",
+    "sphinx.ext.napoleon",
     "nbsphinx",
     "sphinx_panels",
     "sphinx_tabs.tabs",
+    "numpydoc",
 ]
 
 # generate autosummary pages
-autosummary_generate = True
+# autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -93,3 +95,6 @@ html_theme_options = {
     "external_links": [],
     "github_url": "https://github.com/ndavid/EOTorchLoader",
 }
+
+
+numpydoc_show_class_members = False
