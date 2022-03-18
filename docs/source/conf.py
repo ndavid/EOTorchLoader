@@ -10,9 +10,13 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import sys
+import os
+from os.path import abspath, dirname
+
+module_path = os.path.join(abspath(dirname(dirname(dirname(__file__)))), "src")
+print(module_path)
+sys.path.insert(0, module_path)
 
 
 # -- Project information -----------------------------------------------------
