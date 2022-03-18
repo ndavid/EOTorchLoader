@@ -12,3 +12,4 @@ API reference
 
    introduction
    dataset
+   transform
