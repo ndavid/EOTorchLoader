@@ -17,21 +17,34 @@ import numpy as np
 
 class ScaleImageToFloat(BasicTransform):
     """
-    scale an input image to float image between [0, 1]
+    scale an input sample to float image between [0, 1]
     """
 
-    def __init__(self, scale_factor: float = 255, clip: bool = False):
+    def __init__(
+        self,
+        scale_factor: float = 255,
+        clip: bool = False,
+        img_only: bool = True,
+        mask_only: bool = False,
+    ):
         super(ScaleImageToFloat, self).__init__()
-        self.img_only = True
+        self.img_only = img_only
+        self.mask_only = mask_only
         self.scale_factor = scale_factor
         self.clip = clip
 
-    def apply_to_img(self, img: np.ndarray) -> np.ndarray:
-        img = np.multiply(img, 1.0 / self.scale_factor, dtype=np.float32)
+    def _scale_array(self, arr: np.ndarray) -> np.ndarray:
+        arr = np.multiply(arr, 1.0 / self.scale_factor, dtype=np.float32)
         if self.clip:
-            return np.clip(img, 0, 1)
+            return np.clip(arr, 0, 1)
         else:
-            return img
+            return arr
+
+    def apply_to_img(self, img: np.ndarray) -> np.ndarray:
+        return self._scale_array(img)
+
+    def apply_to_mask(self, mask: np.ndarray) -> np.ndarray:
+        return self._scale_array(mask)
 
 
 class FloatImageToByte(BasicTransform):
