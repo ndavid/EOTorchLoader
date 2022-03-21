@@ -2,7 +2,7 @@
 
 .. EOTorchLoader documentation master file, created by Nicolas DAVID
 
-********************************
+*******************************
 EOTorchLoader's documentation!
 *******************************
 

@@ -11,9 +11,9 @@ Basic Dataset types
 
 Utils
 ======
-.. currentmodule:: eotorchloader.dataset.utils
 
 .. automodule:: eotorchloader.dataset.utils
+
 .. autosummary::
    :toctree: generated/
 
