@@ -49,11 +49,13 @@ except ImportError:
 else:
     HAS_TORCH = True
 
+autodoc_mock_imports = []
 for m in [
     "rasterio", "numpy", "pytorch_lightning", "pandas",
     "matplotlib.pyplot"
 ]:
-    sys.modules[m] = mock.Mock(name=m)
+    autodoc_mock_imports.append(m)
+    #sys.modules[m] = mock.Mock(name=m)
 
 for m in [
     "rasterio.windows"
@@ -79,11 +81,11 @@ extensions = [
     "nbsphinx",
     "sphinx_panels",
     "sphinx_tabs.tabs",
-    "numpydoc",
+    "numpydoc"
 ]
 
 # generate autosummary pages
-# autosummary_generate = True
+autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
