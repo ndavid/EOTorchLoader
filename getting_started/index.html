@@ -173,6 +173,21 @@
    Prepair dataframe with EO metadata
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initialize-a-training-dataset">
+   Initialize a training dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#use-samples-transforms">
+   Use samples transforms
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#display-samples-patch">
+   Display samples/patch
+  </a>
+ </li>
 </ul>
 
 </nav>
@@ -214,7 +229,15 @@ this tutorial. Theses dataset are :</p>
 </ul>
 <p>If you had not already download the data, use the following instruction :</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">ISPRS Potsdam</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">INRIA</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>the postdam data could be downloaded from the dedicated <a class="reference external" href="https://seafile.projekt.uni-hannover.de/f/429be50cc79d423ab6c4/">ISRPS page</a>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">INRIA</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">ISPRS Potsdam</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>The data could be donwloaded from the <a class="reference external" href="https://project.inria.fr/aerialimagelabeling/files/">INIRA site</a> or directly
+from terminal</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p EOData/INRIA
+<span class="nb">cd</span> EOData/INRIA
+curl -k https://files.inria.fr/aerialimagelabeling/getAerial.sh <span class="p">|</span> bash
+rm .7z.00*
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>the postdam data could be downloaded from the dedicated <a class="reference external" href="https://seafile.projekt.uni-hannover.de/f/429be50cc79d423ab6c4/">ISRPS page</a>
 with password CjwcipT4-P8g</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p EOData/ISPRS/Potsdam
 <span class="nb">cd</span> EOData/ISPRS/Potsdam
@@ -225,14 +248,6 @@ unzip 4_Ortho_RGBIR.zip
 unzip 5_Labels_all.zip -d 5_Labels_all
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>The data could be donwloaded from the <a class="reference external" href="https://project.inria.fr/aerialimagelabeling/files/">INIRA site</a> or directly
-from terminal</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p EOData/INRIA
-<span class="nb">cd</span> EOData/INRIA
-curl -k https://files.inria.fr/aerialimagelabeling/getAerial.sh <span class="p">|</span> bash
-rm .7z.00*
-</pre></div>
-</div>
 </div></div>
 </section>
 <section id="prepair-dataframe-with-eo-metadata">
@@ -241,6 +256,180 @@ rm .7z.00*
 and should be defined by the user.
 The prefered way for this is to construct a Pandas Dataframe with all informations
 for an (image, mask) sample on each row of the dataframe.</p>
+<p>First we import pandas and some utils functions.
+EOTorchLoader has functions to help listing image metadata in a directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">eotorchloader.dataset.utils</span> <span class="kn">import</span> <span class="n">load_geo_img_dir</span>
+</pre></div>
+</div>
+<p>Then depending of the dataset we prepair a dataframe with a row by image and at least
+somme columns with :</p>
+<ul class="simple">
+<li><p>the path to the image file (ex: “img_path”)</p></li>
+<li><p>the path to the ground truth/mask files (ex: “im_path”)</p></li>
+<li><p>a column with train|val|test split (ex: “standard_split”)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The split into train|val|test or kfolds is done at image level (row in dataframe) and
+not on the tile level. This is a choice made to avoid spatial correlation between folds.</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">INRIA</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">ISPRS Potsdam</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><p>The INRIA Aerial Image Labeling Dataset has the following structure :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.
+├── test
+│   └── images
+└── train
+     ├── gt
+     └── images
+</pre></div>
+</div>
+<p>Each image has a filename of type {town_prefix}{i}.tif with i in [1:36].
+Gt (ground truth) and image has the same filename.</p>
+<ul class="simple">
+<li><p>First we load info of train images with <em>load_geo_img_dir</em> utils function of EOTorchLoader</p></li>
+<li><p>Then we define a split in train data between train and val dataset by setting val
+image as first images of each town.
+Usually for INRIA dataset val images are set as the 6 first image of each towns.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># first get images geo metadata</span>
+<span class="n">inria_dataset_root_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/path/to/your/EOData/INRIA/AerialImageDataset&quot;</span><span class="p">)</span>
+<span class="n">inria_train_val_df</span> <span class="o">=</span> <span class="n">load_geo_img_dir</span><span class="p">(</span><span class="n">inria_dataset_root_dir</span><span class="o">/</span><span class="s2">&quot;train&quot;</span><span class="o">/</span><span class="s2">&quot;images&quot;</span><span class="p">)</span>
+
+<span class="c1"># Then add a columns for the train|val split</span>
+<span class="c1"># This is done by splitting the name string values (as &quot;tyrol-w28&quot;) in 2 parts :</span>
+<span class="c1">#    - a name with alphabetic character (&quot;tyrol-w&quot;)</span>
+<span class="c1">#    - and a id/num with numerical values (28)</span>
+<span class="n">inria_train_val_df</span><span class="p">[[</span><span class="s1">&#39;town&#39;</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">inria_train_val_df</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s1">&#39;([a-zA-Z\-]+)([^a-zA-Z\-]+)&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># convert num from string to int</span>
+<span class="n">inria_train_val_df</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inria_train_val_df</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Next we add standard_split columns</span>
+<span class="c1"># first initialize all row with train</span>
+<span class="n">inria_train_val_df</span><span class="p">[</span><span class="s2">&quot;standard_split&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;train&quot;</span>
+<span class="c1"># set all row/image with num &lt; 6 as validation data</span>
+<span class="n">inria_train_val_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">inria_train_val_df</span><span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">]</span><span class="o">&lt;=</span><span class="mi">6</span> <span class="p">,</span><span class="s2">&quot;standard_split&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;val&quot;</span>
+
+<span class="c1"># finally we rename &#39;path&#39; as &#39;img_path&#39; and add</span>
+<span class="c1"># a &#39;gt_path&#39; columns with corresponding mask path</span>
+<span class="n">inria_train_val_df</span> <span class="o">=</span> <span class="n">inria_train_val_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;img_path&quot;</span><span class="p">})</span>
+<span class="n">inria_train_val_df</span><span class="p">[</span><span class="s2">&quot;msk_path&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">inria_train_val_df</span><span class="p">[</span><span class="s2">&quot;img_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+    <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;gt&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>Todo</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="initialize-a-training-dataset">
+<h2>Initialize a training dataset<a class="headerlink" href="#initialize-a-training-dataset" title="Permalink to this headline">¶</a></h2>
+<p>Once we have the list of image and mask on a dataframe, we could
+intialize a custom torch.dataset doing <strong>online</strong> image tiling</p>
+<p>First import EOTorchLoader dataset</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import for use in train code</span>
+<span class="kn">from</span> <span class="nn">eotorchloader.dataset.scene_dataset</span> <span class="kn">import</span> <span class="n">LargeImageDataset</span>
+</pre></div>
+</div>
+<p>Then initialize the dataset.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">INRIA</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">ISPRS Potsdam</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><p>to init the train dataset</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inria_train_df</span> <span class="o">=</span> <span class="n">inria_train_val_df</span><span class="p">[</span>
+     <span class="n">inria_train_val_df</span><span class="p">[</span><span class="s2">&quot;standard_split&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;train&quot;</span><span class="p">]</span>
+<span class="n">image_files_train</span> <span class="o">=</span> <span class="n">inria_train_df</span><span class="p">[</span><span class="s2">&quot;img_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">mask_files_train</span> <span class="o">=</span> <span class="n">inria_train_df</span><span class="p">[</span><span class="s2">&quot;msk_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">train_dataset_tile</span> <span class="o">=</span> <span class="n">LargeImageDataset</span><span class="p">(</span>
+     <span class="n">image_files</span><span class="o">=</span><span class="n">image_files_train</span><span class="p">,</span>
+     <span class="n">mask_files</span><span class="o">=</span><span class="n">mask_files_train</span><span class="p">,</span>
+     <span class="n">tile_size</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+     <span class="n">transforms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+     <span class="n">image_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+     <span class="n">mask_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><p>Todo</p>
+</div></div>
+<p>Check that we have a sample with correct dict format and array shape :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">test_idx</span> <span class="o">=</span> <span class="mi">201</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">train_dataset_tile</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; keys : </span><span class="si">{</span><span class="n">test_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">img_shape</span> <span class="o">=</span>  <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">msk_shape</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; image shape : </span><span class="si">{</span><span class="n">img_shape</span><span class="si">}</span><span class="s2">, mask shape : </span><span class="si">{</span><span class="n">msk_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; mask type : </span><span class="si">{</span><span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>the tile_size is set in pixel</p></li>
+<li><p>by default no transform is apply and the sample are in form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;image&quot;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+  <span class="s2">&quot;mask&quot;</span> <span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>image and mask array are in channel first order (CHW or rasterio like)</p></li>
+</ul>
+</div>
+</section>
+<section id="use-samples-transforms">
+<h2>Use samples transforms<a class="headerlink" href="#use-samples-transforms" title="Permalink to this headline">¶</a></h2>
+<p>EOTorchLoader dataset made no assertion considering the formatting of training data.
+So, to convert raw input data into pytorch compatible training sample one must
+define the dedicated transforms (datapipe).</p>
+<p>Must of the time input data should be scale to [0 - 1] range and convert to float.
+Common EO transforms are  available in eotorchloader.transform</p>
+<p>Import commons transforms for format EO training data</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eotorchloader.transform.scale</span> <span class="kn">import</span> <span class="n">ScaleImageToFloat</span>
+<span class="kn">from</span> <span class="nn">eotorchloader.transform.tensor</span> <span class="kn">import</span> <span class="n">ToTorchTensor</span>
+</pre></div>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">INRIA</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">ISPRS Potsdam</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><p>Inria input data are :</p>
+<ul class="simple">
+<li><p>on RVB uint8 format for image and should transform to RVB float [0-1] range</p></li>
+<li><p>on grayscale uint8 format for mask data. With 0 == nobuilding and 255 == building.
+We transfom this also into float tensor between [0-1] range with 1.0 == building.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># transforms for training</span>
+<span class="n">inria_train_tf</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="n">ScaleImageToFloat</span><span class="p">(</span><span class="n">scale_factor</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+   <span class="n">ToTorchTensor</span><span class="p">()</span>
+<span class="p">]</span>
+
+<span class="n">train_dataset_tile_b</span> <span class="o">=</span> <span class="n">LargeImageDataset</span><span class="p">(</span>
+     <span class="n">image_files</span><span class="o">=</span><span class="n">image_files_train</span><span class="p">,</span>
+     <span class="n">mask_files</span><span class="o">=</span><span class="n">mask_files_train</span><span class="p">,</span>
+     <span class="n">tile_size</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+     <span class="n">transforms</span><span class="o">=</span><span class="n">inria_train_tf</span><span class="p">,</span>
+     <span class="n">image_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+     <span class="n">mask_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Todo</p>
+</div></div>
+</section>
+<section id="display-samples-patch">
+<h2>Display samples/patch<a class="headerlink" href="#display-samples-patch" title="Permalink to this headline">¶</a></h2>
+<p>Transforms could also be used to display samples whith standard python plotting libraries.
+For example when using matplotlib images should be in channel last order and 3 channels mean
+RVB data.</p>
+<p>To avoid defining a dedicated Dataset to plot samples, display transforms are also use inside
+display function (and after the dataset transforms)</p>
+<p>EOTorchLoader has some already define function and transform for displaying EO (and land cover)
+sample data</p>
+<p>Import display functions</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eotorchloader.transform.display</span> <span class="kn">import</span> <span class="n">ToRgbDisplay</span>
+<span class="kn">from</span> <span class="nn">eotorchloader.display.matplotlib</span> <span class="kn">import</span> <span class="n">view_patch</span><span class="p">,</span> <span class="n">view_batch</span>
+</pre></div>
+</div>
 </section>
 </section>
 

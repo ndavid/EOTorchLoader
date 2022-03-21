@@ -28,6 +28,19 @@ If you had not already download the data, use the following instruction :
 
 .. tabs::
 
+   .. tab:: INRIA
+
+      The data could be donwloaded from the `INIRA site <https://project.inria.fr/aerialimagelabeling/files/>`_ or directly
+      from terminal
+
+      .. code-block:: bash
+
+         mkdir -p EOData/INRIA
+         cd EOData/INRIA
+         curl -k https://files.inria.fr/aerialimagelabeling/getAerial.sh | bash
+         rm .7z.00*
+
+
    .. tab:: ISPRS Potsdam
 
       the postdam data could be downloaded from the dedicated `ISRPS page <https://seafile.projekt.uni-hannover.de/f/429be50cc79d423ab6c4/>`_
@@ -44,18 +57,6 @@ If you had not already download the data, use the following instruction :
          unzip 5_Labels_all.zip -d 5_Labels_all
 
 
-   .. tab:: INRIA
-
-      The data could be donwloaded from the `INIRA site <https://project.inria.fr/aerialimagelabeling/files/>`_ or directly
-      from terminal
-
-      .. code-block:: bash
-
-         mkdir -p EOData/INRIA
-         cd EOData/INRIA
-         curl -k https://files.inria.fr/aerialimagelabeling/getAerial.sh | bash
-         rm .7z.00*
-
 
 Prepair dataframe with EO metadata
 -----------------------------------
@@ -64,3 +65,222 @@ In EOTorchLoader the path of image and mask data are set outside EoTorchLoader D
 and should be defined by the user.
 The prefered way for this is to construct a Pandas Dataframe with all informations
 for an (image, mask) sample on each row of the dataframe.
+
+First we import pandas and some utils functions.
+EOTorchLoader has functions to help listing image metadata in a directory.
+
+.. code-block:: python
+
+   import pandas as pd
+   from eotorchloader.dataset.utils import load_geo_img_dir
+
+
+Then depending of the dataset we prepair a dataframe with a row by image and at least
+somme columns with :
+
+* the path to the image file (ex: "img_path")
+* the path to the ground truth/mask files (ex: "im_path")
+* a column with train|val|test split (ex: "standard_split")
+
+.. note::
+
+   The split into train|val|test or kfolds is done at image level (row in dataframe) and
+   not on the tile level. This is a choice made to avoid spatial correlation between folds.
+
+
+.. tabs::
+
+   .. tab:: INRIA
+
+      The INRIA Aerial Image Labeling Dataset has the following structure : ::
+
+         .
+         ├── test
+         │   └── images
+         └── train
+              ├── gt
+              └── images
+
+      Each image has a filename of type {town_prefix}{i}.tif with i in [1:36].
+      Gt (ground truth) and image has the same filename.
+
+      * First we load info of train images with *load_geo_img_dir* utils function of EOTorchLoader
+      * Then we define a split in train data between train and val dataset by setting val
+        image as first images of each town.
+        Usually for INRIA dataset val images are set as the 6 first image of each towns.
+
+      .. code-block:: python
+
+         # first get images geo metadata
+         inria_dataset_root_dir = Path("/path/to/your/EOData/INRIA/AerialImageDataset")
+         inria_train_val_df = load_geo_img_dir(inria_dataset_root_dir/"train"/"images")
+
+         # Then add a columns for the train|val split
+         # This is done by splitting the name string values (as "tyrol-w28") in 2 parts :
+         #    - a name with alphabetic character ("tyrol-w")
+         #    - and a id/num with numerical values (28)
+         inria_train_val_df[['town', 'num']] = inria_train_val_df["name"].str.extract(
+             '([a-zA-Z\-]+)([^a-zA-Z\-]+)', expand=True)
+         # convert num from string to int
+         inria_train_val_df['num'] = inria_train_val_df['num'].astype(int)
+
+         # Next we add standard_split columns
+         # first initialize all row with train
+         inria_train_val_df["standard_split"] = "train"
+         # set all row/image with num < 6 as validation data
+         inria_train_val_df.loc[inria_train_val_df["num"]<=6 ,"standard_split"] = "val"
+
+         # finally we rename 'path' as 'img_path' and add
+         # a 'gt_path' columns with corresponding mask path
+         inria_train_val_df = inria_train_val_df.rename(columns={"path": "img_path"})
+         inria_train_val_df["msk_path"] =  inria_train_val_df["img_path"].str.replace(
+             "images", "gt", regex=False)
+
+
+   .. tab:: ISPRS Potsdam
+
+      Todo
+
+      .. code-block:: python
+
+         # TODO
+
+
+Initialize a training dataset
+-----------------------------
+
+Once we have the list of image and mask on a dataframe, we could
+intialize a custom torch.dataset doing **online** image tiling
+
+First import EOTorchLoader dataset
+
+.. code-block:: python
+
+   # import for use in train code
+   from eotorchloader.dataset.scene_dataset import LargeImageDataset
+
+Then initialize the dataset.
+
+.. tabs::
+
+   .. tab:: INRIA
+
+      to init the train dataset
+
+      .. code-block:: python
+
+         inria_train_df = inria_train_val_df[
+              inria_train_val_df["standard_split"]=="train"]
+         image_files_train = inria_train_df["img_path"].values
+         mask_files_train = inria_train_df["msk_path"].values
+
+         train_dataset_tile = LargeImageDataset(
+              image_files=image_files_train,
+              mask_files=mask_files_train,
+              tile_size = 512,
+              transforms=None,
+              image_bands=[1,2,3],
+              mask_bands=[1])
+
+   .. tab:: ISPRS Potsdam
+
+      Todo
+
+Check that we have a sample with correct dict format and array shape :
+
+.. code-block:: python
+
+   import numpy as np
+   test_idx = 201
+   test_data = train_dataset_tile[test_idx]
+   print(f" keys : {test_data.keys()}")
+   img_shape =  test_data['image'].shape
+   msk_shape = test_data['mask'].shape
+   print(f" image shape : {img_shape}, mask shape : {msk_shape}")
+   print(f" mask type : {test_data['mask'].dtype}")
+
+
+.. note::
+
+   * the tile_size is set in pixel
+   * by default no transform is apply and the sample are in form
+
+     .. code-block:: python
+
+        {
+          "image" : np.array,
+          "mask" :np.array
+        }
+
+   * image and mask array are in channel first order (CHW or rasterio like)
+
+
+Use samples transforms
+----------------------
+
+EOTorchLoader dataset made no assertion considering the formatting of training data.
+So, to convert raw input data into pytorch compatible training sample one must
+define the dedicated transforms (datapipe).
+
+Must of the time input data should be scale to [0 - 1] range and convert to float.
+Common EO transforms are  available in eotorchloader.transform
+
+Import commons transforms for format EO training data
+
+.. code-block:: python
+
+   from eotorchloader.transform.scale import ScaleImageToFloat
+   from eotorchloader.transform.tensor import ToTorchTensor
+
+
+.. tabs::
+
+   .. tab:: INRIA
+
+      Inria input data are :
+
+      * on RVB uint8 format for image and should transform to RVB float [0-1] range
+      * on grayscale uint8 format for mask data. With 0 == nobuilding and 255 == building.
+        We transfom this also into float tensor between [0-1] range with 1.0 == building.
+
+
+      .. code-block:: python
+
+         # transforms for training
+         inria_train_tf = [
+            ScaleImageToFloat(scale_factor=255, clip=True),
+            ToTorchTensor()
+         ]
+
+         train_dataset_tile_b = LargeImageDataset(
+              image_files=image_files_train,
+              mask_files=mask_files_train,
+              tile_size = 512,
+              transforms=inria_train_tf,
+              image_bands=[1,2,3],
+              mask_bands=[1])
+
+   .. tab:: ISPRS Potsdam
+
+      Todo
+
+
+Display samples/patch
+----------------------
+
+Transforms could also be used to display samples whith standard python plotting libraries.
+For example when using matplotlib images should be in channel last order and 3 channels mean
+RVB data.
+
+To avoid defining a dedicated Dataset to plot samples, display transforms are also use inside
+display function (and after the dataset transforms)
+
+EOTorchLoader has some already define function and transform for displaying EO (and land cover)
+sample data
+
+Import display functions
+
+.. code-block:: python
+
+   from eotorchloader.transform.display import ToRgbDisplay
+   from eotorchloader.display.matplotlib import view_patch, view_batch

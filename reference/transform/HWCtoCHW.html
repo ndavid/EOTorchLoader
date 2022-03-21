@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>load_geo_img_dir &#8212; EOTorchLoader 0.1 documentation</title>
+    <title>HWC_to_CHW &#8212; EOTorchLoader 0.1 documentation</title>
     
     <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -40,8 +40,8 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Transforms" href="../transform.html" />
-    <link rel="prev" title="Dataset" href="../dataset.html" />
+    <link rel="next" title="ToTorchTensor" href="ToTorchTensor.html" />
+    <link rel="prev" title="CHW_to_HWC" href="CHWtoHWC.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -146,55 +146,55 @@
    Introduction
   </a>
  </li>
- <li class="toctree-l1 current active has-children">
+ <li class="toctree-l1 has-children">
   <a class="reference internal" href="../dataset.html">
    Dataset
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     load_geo_img_dir
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../transform.html">
-   Transforms
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../transform/CHWtoHWC.html">
+    <a class="reference internal" href="../generated/eotorchloader.dataset.utils.load_geo_img_dir.html">
+     load_geo_img_dir
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../transform.html">
+   Transforms
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="CHWtoHWC.html">
      CHW_to_HWC
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../transform/HWCtoCHW.html">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      HWC_to_CHW
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../transform/ToTorchTensor.html">
+    <a class="reference internal" href="ToTorchTensor.html">
      ToTorchTensor
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../transform/TensorToArray.html">
+    <a class="reference internal" href="TensorToArray.html">
      TensorToArray
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../transform/RgbDisplay.html">
+    <a class="reference internal" href="RgbDisplay.html">
      ToRgbDisplay
     </a>
    </li>
@@ -239,55 +239,31 @@
               
               <div>
                 
-  <section id="load-geo-img-dir">
-<h1>load_geo_img_dir<a class="headerlink" href="#load-geo-img-dir" title="Permalink to this headline">¶</a></h1>
-<p>Module : eotorchloader.dataset.utils</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="eotorchloader.dataset.utils.load_geo_img_dir">
-<span class="sig-name descname"><span class="pre">load_geo_img_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_suffix_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['.tif',</span> <span class="pre">'.jp2']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="headerlink" href="#eotorchloader.dataset.utils.load_geo_img_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>list info/metadata of images from a directory into a dataframe</p>
-<p>list all images which are in a img_dir and with suffix present in img_suffix_list.
-All image are open with rasterio to load their geographic metadata and all the informations
-are written in a pandas Dataframe with one row by image and with columns :</p>
-<ul class="simple">
-<li><p>“name” : name (str) of the image without extension</p></li>
-<li><p>“path” : full path of the image (dir+name+extension)</p></li>
-<li><p>“width” : width of the image in pixel (int)</p></li>
-<li><p>“height” : height of the image in pixel (int)</p></li>
-<li><p>“res_x” : resolution in x axis (float)</p></li>
-<li><p>“res_y” : resolution in y axis (float)</p></li>
-<li><p>“ul_x” : upper left coordinate of the image in x axis (float)</p></li>
-<li><p>“ul_y” : upper left coordinate of the image in y axis (float)</p></li>
-<li><p>“transform” : full affine transform to convert from pixel coordinate to grund coordinate.
-follow the rasterio convention.</p></li>
-</ul>
+  <section id="hwc-to-chw">
+<span id="id1"></span><h1>HWC_to_CHW<a class="headerlink" href="#hwc-to-chw" title="Permalink to this headline">¶</a></h1>
+<p>module : eotorchloader.transform.tensor</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="eotorchloader.transform.tensor.HWC_to_CHW">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HWC_to_CHW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eotorchloader.transform.tensor.HWC_to_CHW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert (image, mask) sample from channel last to channel first order</p>
+<p>depending on the input format or the output sample format is it often
+needed to convert array or tensor data from channel last order (HWC)
+to channel first order. For exemple PIL or matplotlib use channel last
+order for RVB images and pytorch training and rasterio use mainly
+channel first order.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The rasterio transform convention is :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">transform</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">resolution</span><span class="o">/</span><span class="n">scale</span> <span class="n">x</span><span class="p">,</span>
-    <span class="n">rotation</span> <span class="n">row</span><span class="o">/</span><span class="n">x</span><span class="p">,</span>
-    <span class="n">upper_left</span><span class="o">/</span><span class="n">origin</span> <span class="n">x</span><span class="p">,</span>
-    <span class="n">rotation</span> <span class="n">col</span><span class="o">/</span><span class="n">y</span><span class="p">,</span>
-    <span class="n">resolution</span><span class="o">/</span><span class="n">scale</span> <span class="n">y</span><span class="p">,</span>
-    <span class="n">upper_left</span><span class="o">/</span><span class="n">origin</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>Input (image, mask) should already be in HWC.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>img_dir</strong> (<em>Path</em>) – Path of the directory where images will be search</p></li>
-<li><p><strong>img_suffix_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of image extension to filter files in img_dir.</p></li>
+<li><p><strong>img_only</strong> (<em>str</em>) – Apply transform only to image</p></li>
+<li><p><strong>mask_only</strong> (<em>List</em><em>(</em><em>Int</em><em>)</em>) – Apply transform only to mask</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Pandas dataframe with a row by images. empty if no images found</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
-</dd>
 </dl>
+<p>see <a class="reference internal" href="CHWtoHWC.html#chw-to-hwc"><span class="std std-ref">CHW_to_HWC</span></a></p>
 </dd></dl>
 
 </section>
@@ -298,17 +274,17 @@ follow the rasterio convention.</p></li>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../dataset.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="CHWtoHWC.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Dataset</p>
+            <p class="prev-next-title">CHW_to_HWC</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../transform.html" title="next page">
+    <a class='right-next' id="next-link" href="ToTorchTensor.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Transforms</p>
+        <p class="prev-next-title">ToTorchTensor</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
