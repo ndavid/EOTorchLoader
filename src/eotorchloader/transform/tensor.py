@@ -17,6 +17,24 @@ from .base import BasicTransform
 
 
 class HWC_to_CHW(BasicTransform):
+    """
+    Convert (image, mask) sample from channel last to channel first order
+
+    depending on the input format or the output sample format is it often
+    needed to convert array or tensor data from channel last order (HWC)
+    to channel first order. For exemple PIL or matplotlib use channel last
+    order for RVB images and pytorch training and rasterio use mainly
+    channel first order.
+
+    Note:
+        Input (image, mask) should already be in HWC.
+
+    Args:
+        img_only (str) : Apply transform only to image
+        mask_only (List(Int)) : Apply transform only to mask
+
+    """
+
     def __init__(self, img_only: bool = False, mask_only: bool = False):
         super(CHW_to_HWC, self).__init__()
         self.img_only = img_only
@@ -36,6 +54,24 @@ class HWC_to_CHW(BasicTransform):
 
 
 class CHW_to_HWC(BasicTransform):
+    """
+    Convert (image, mask) sample from channel first to channel last order
+
+    depending on the input format or the output sample format is it often
+    needed to convert array or tensor data from channel last order (HWC)
+    to channel first order. For exemple PIL or matplotlib use channel last
+    order for RVB images and pytorch training and rasterio use mainly
+    channel first order.
+
+    Note:
+        Input (image, mask) should already be in CHW.
+
+    Args:
+        img_only (str) : Apply transform only to image
+        mask_only (List(Int)) : Apply transform only to mask
+
+    """
+
     def __init__(self, img_only: bool = False, mask_only: bool = False):
         super(CHW_to_HWC, self).__init__()
         self.img_only = img_only
@@ -55,6 +91,18 @@ class CHW_to_HWC(BasicTransform):
 
 
 class ToTorchTensor(BasicTransform):
+    """
+    Convert (image, mask) sample from numpy array to torch tensor
+
+    Note:
+        Output type cast to torch.float32
+
+    Args:
+        img_only (str) : Apply transform only to image
+        mask_only (List(Int)) : Apply transform only to mask
+
+    """
+
     def __init__(self, img_only: bool = False, mask_only: bool = False):
         super(ToTorchTensor, self).__init__()
         self.img_only = img_only
@@ -68,6 +116,18 @@ class ToTorchTensor(BasicTransform):
 
 
 class TensorToArray(BasicTransform):
+    """
+    Convert (image, mask) sample torch tensor to numpy array
+
+    Note:
+       tensor in gpu
+
+    Args:
+        img_only (str) : Apply transform only to image
+        mask_only (List(Int)) : Apply transform only to mask
+
+    """
+
     def __init__(self, img_only: bool = False, mask_only: bool = False):
         super(TensorToArray, self).__init__()
         self.img_only = img_only

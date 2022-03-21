@@ -28,7 +28,7 @@ class ToRgbDisplay(BasicTransform):
         from one to another format see ..
 
     Args:
-        color_compo (str) : Name or color composition to use, if use image channels should
+        color_compo (str) : Name or color composition to use, if use then image channels should
           be ordered by increasing spectral wavelenght (Blue, Green , Red, Infra-Red)
         channels_display (List(Int)) : List of channel to use as gray or Red, Green, Blue band
           if len(channels_display)=1 is for gray mode and len=3 for RGB mode

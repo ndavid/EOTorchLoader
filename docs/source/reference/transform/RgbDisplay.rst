@@ -4,8 +4,5 @@
 ToRgbDisplay
 ============
 
-Overview
-========
-
 .. currentmodule:: eotorchloader.transform.display
 .. autoclass:: ToRgbDisplay
