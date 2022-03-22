@@ -28,12 +28,18 @@ class TerriaDataModule(pl.LightningDataModule):
         mask_bands=None,
         group_col="fold",
         set_config=None,
+        tile_size=512,
+        batch_size=4,
+        num_workers=None,
     ):
 
         super().__init__()
-        self.batch_size = 4
-        self.tile_size = 512
-        self.num_workers = 2
+        self.batch_size = batch_size
+        self.tile_size = tile_size
+        if num_workers:
+            self.num_workers = num_workers
+        else:
+            self.num_workers = 2
 
         self.transform = transforms
         self.image_bands = img_bands
