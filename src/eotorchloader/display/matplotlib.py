@@ -40,6 +40,7 @@ def view_patch(data, transforms=None):
 
     plt.tight_layout()
     plt.show()
+    return plt
 
 
 def view_batch(batch_data, transforms=None, size=None, ncols=None):
@@ -74,3 +75,4 @@ def view_batch(batch_data, transforms=None, size=None, ncols=None):
 
     plt.tight_layout()
     plt.show()
+    return plt

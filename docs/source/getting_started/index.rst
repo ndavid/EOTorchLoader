@@ -246,23 +246,47 @@ Import commons transforms for format EO training data
 
       .. code-block:: python
 
-         # transforms for training
          inria_train_tf = [
-            ScaleImageToFloat(scale_factor=255, clip=True),
+            ScaleImageToFloat(scale_factor=255, clip=True, img_only=False),
             ToTorchTensor()
          ]
 
          train_dataset_tile_b = LargeImageDataset(
-              image_files=image_files_train,
-              mask_files=mask_files_train,
-              tile_size = 512,
-              transforms=inria_train_tf,
-              image_bands=[1,2,3],
-              mask_bands=[1])
+            image_files=image_files_train,
+            mask_files=mask_files_train,
+            tile_size = 384,
+            transforms=inria_train_tf,
+            image_bands=[1,2,3],
+            mask_bands=[1]
 
    .. tab:: ISPRS Potsdam
 
       Todo
+
+We could see that the sample is now compose of pytorch float Tensor with value between [0-1].
+The following tests
+
+.. code-block:: python
+
+   test_idx = 240
+   test_data = train_dataset_tile_b[test_idx]
+   print(f" keys : {test_data.keys()}")
+   img_shape =  test_data['image'].shape
+   msk_shape = test_data['mask'].shape
+   print(f" image shape : {img_shape}, mask shape : {msk_shape}")
+   print(f" mask type : {test_data['mask'].dtype}")
+
+should display : ::
+
+   keys : dict_keys(['image', 'mask'])
+   image shape : torch.Size([3, 384, 384]), mask shape : torch.Size([1, 384, 384])
+   mask type : torch.float32
+   image min 0.0 max : 0.992
+   mask histogram torch.return_types.histogram(
+   hist=tensor([144520.,      0.,      0.,      0.,      0.,      0.,      0.,      0.,
+               0.,      0.,   2936.]),
+   bin_edges=tensor([0.0000, 0.0909, 0.1818, 0.2727, 0.3636, 0.4545, 0.5455, 0.6364, 0.7273,
+         0.8182, 0.9091, 1.0000]))
 
 
 Display samples/patch
@@ -283,4 +307,71 @@ Import display functions
 .. code-block:: python
 
    from eotorchloader.transform.display import ToRgbDisplay
+   from eotorchloader.transform.tensor import CHW_to_HWC
    from eotorchloader.display.matplotlib import view_patch, view_batch
+
+To display data with matplotlib we should :
+
+* convert image data from channel first order (CHW) to channel last order (HWC)
+* convert mask/grayscale image to RVB data with a colormap/lut table.
+
+.. tabs::
+
+   .. tab:: INRIA
+
+      Inria input data are on grayscale uint8 format for mask data.
+      With 0 == nobuilding and 255 == building. We convert this values
+      to some RVB color with a LUT of shape (4, 2)
+
+      .. code-block:: python
+
+         inria_lut = np.array([
+            [  0, 255,  255, 255], # white
+            [  255, 255, 50, 150]  # pink
+         ])
+         display_patch_transform = ToRgbDisplay(lut=inria_lut, flatten_mask=False)
+
+Next we add a CHW to HWC transform before the ToRgbDisplay transform.
+
+.. code-block:: python
+
+   channel_last_transform = CHW_to_HWC(img_only=True)
+   display_tf_list= [
+      channel_last_transform,
+      display_patch_transform]
+
+And finally we call the view_patch function
+
+.. code-block:: python
+
+   test_data = train_dataset_tile[142]
+   view_patch(test_data, transforms=display_tf_list)
+
+.. image:: /_static/view_patch_inria_a.jpg
+  :width: 650
+  :align: center
+  :alt: Example of RGB patch on INRIA dataset
+
+To display the same tensor as the ones use on training input, or to display val/prediction
+results we need to had two additionals tranforms before the last display transforms :
+
+* a transform to convert from pytorch tensor to numpy
+* a transform to pass from [0-1] float image to [0-255] Bytes. (depend on plotting backend)
+
+.. code-block:: python
+
+   from eotorchloader.transform.scale import FloatImageToByte
+   from eotorchloader.transform.tensor import TensorToArray, CHW_to_HWC
+
+.. code-block:: python
+
+   display_b_tf_list= [
+      TensorToArray(),
+      FloatImageToByte(clip=True, img_only=False),
+      channel_last_transform,
+      display_patch_transform]
+
+.. code-block:: python
+
+   test_data = train_dataset_tile_b[144]
+   view_patch(test_data, transforms=display_b_tf_list)
