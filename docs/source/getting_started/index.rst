@@ -375,3 +375,47 @@ results we need to had two additionals tranforms before the last display transfo
 
    test_data = train_dataset_tile_b[144]
    view_patch(test_data, transforms=display_b_tf_list)
+
+
+Dataloader and datamodule
+--------------------------
+EoTorchLoader dataset could also be use with pytorch Dataloader or pytroch lightning datamodule.
+
+
+Dataloader
+'''''''''''
+
+Using it with a pytroch dataloader is simple and follow the standard dataset/dataloader code.
+
+.. code-block:: python
+
+   from torch.utils.data import DataLoader
+   inria_train_dataloader = DataLoader(train_dataset_tile_b, batch_size=4, num_workers=4)
+
+then the dataloader could be use in your training loop
+
+.. code-block:: python
+
+   from tqdm import tqdm
+
+   with tqdm(
+      total=len(inria_train_dataloader), desc=f"patch Image loader",
+      bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}]') as pbar:
+
+      for sample in inria_train_dataloader:
+         images = sample['image']
+         masks = sample['mask']
+         # DO SOMETHING TO TRAIN THE MODEL ..
+         pbar.update(1)
+
+eotorchloader offer also basic display function to display batch of data
+
+.. code-block:: python
+
+   from eotorchloader.display.matplotlib import view_patch, view_batch
+   test_batch = next(iter(inria_train_dataloader))
+   view_batch(test_batch, size = 4, transforms = display_b_tf_list)
+
+
+Lightning datamodule
+'''''''''''''''''''''
