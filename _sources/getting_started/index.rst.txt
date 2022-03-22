@@ -381,7 +381,6 @@ Dataloader and datamodule
 --------------------------
 EoTorchLoader dataset could also be use with pytorch Dataloader or pytroch lightning datamodule.
 
-
 Dataloader
 '''''''''''
 
@@ -416,6 +415,109 @@ eotorchloader offer also basic display function to display batch of data
    test_batch = next(iter(inria_train_dataloader))
    view_batch(test_batch, size = 4, transforms = display_b_tf_list)
 
+.. image:: /_static/view_batch_inria_b.jpg
+  :width: 800
+  :align: center
+  :alt: Example of RGB batch on INRIA dataset
+
 
 Lightning datamodule
 '''''''''''''''''''''
+
+.. warning::
+
+   this part is still in work in progress and mainly support for internal
+   TerrIa project.
+
+
+When using datapipe and dataloader in pytorch it's common to have
+a datapipe (or dataset) and associated dataloader for each of the
+train|val|test part of the data. Pytorch lightning offer a datamodule
+API which ease the manipulation of this three associated dataloader
+in one class.
+
+Eotrochloader has dedicated daamodule to made use of gegraphical fold
+more simple.
+
+First import the eotorchloader datamodule
+
+.. code-block:: python
+
+   from eotorchloader.datamodule.terria import TerriaDataModule
+
+Then write a dictionnary with the fold structure of your data.
+
+.. note::
+
+   as test ground truth is not available for INRIA dataset we test
+   datamodule functionnality in kfold mode with a fold by town in
+   the train data.
+
+.. tabs::
+
+   .. tab:: INRIA
+
+      The INRIA train data are available on 5 distinct geographical
+      area whith 36 images in each area.
+
+      .. code-block:: python
+
+         inria_train_df["town"].unique()
+
+      ['tyrol-w', 'chicago', 'kitsap', 'vienna', 'austin']
+
+      We define a kfold split with 3 town in train, 1 in val and
+      1 in test. Here it's manually define but one could automatize
+      this part with some scikit-learn kfold functions.
+
+      .. code-block:: python
+
+         fold_config = {
+            "set_1" : {
+               "train" : ['kitsap', 'vienna', 'austin'],
+               "val" : ['chicago'],
+               "test" : ['tyrol-w'] },
+            "set_2" : {
+               "train" : ['vienna', 'austin', 'tyrol-w'],
+               "val" : ['kitsap'],
+               "test" : ['chicago'] },
+            "set_3" : {
+               "train" : ['austin', 'tyrol-w', 'chicago'],
+               "val" : ['vienna'],
+               "test" : ['kitsap'] },
+            "set_4" : {
+               "train" : ['tyrol-w', 'chicago', 'kitsap'],
+               "val" : ['austin'],
+               "test" : ['vienna'] },
+            "set_5" : {
+               "train" : ['chicago', 'kitsap', 'vienna'],
+               "val" : ['tyrol-w'],
+               "test" : ['austin']
+         }
+
+Then we use the fold config to initialize a datamodule with the set we want
+to use in our training
+
+.. code-block:: python
+
+   kfold_datamodule_3 = TerriaDataModule(
+      inria_train_df,
+      transforms = inria_train_tf,
+      img_col = "img_path",
+      img_bands = [1,2,3],
+      mask_col = "msk_path",
+      mask_bands = [1],
+      group_col = "town",
+      set_config = fold_config["fold_3"],
+      tile_size=512,
+      batch_size=4)
+
+And it could be used as standard pytorch lightning module. For exemple
+to display a batch of training data :
+
+.. code-block:: python
+
+   kfold_datamodule_3.setup()
+   pl_train_loader = kfold_datamodule_3.train_dataloader()
+   test_batch = next(iter(pl_train_loader))
+   view_batch(test_batch, size = 4, transforms = display_b_tf_list)

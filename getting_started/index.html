@@ -552,9 +552,91 @@ results we need to had two additionals tranforms before the last display transfo
 <span class="n">view_batch</span><span class="p">(</span><span class="n">test_batch</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">transforms</span> <span class="o">=</span> <span class="n">display_b_tf_list</span><span class="p">)</span>
 </pre></div>
 </div>
+<a class="reference internal image-reference" href="../_images/view_batch_inria_b.jpg"><img alt="Example of RGB batch on INRIA dataset" class="align-center" src="../_images/view_batch_inria_b.jpg" style="width: 800px;" /></a>
 </section>
 <section id="lightning-datamodule">
 <h3>Lightning datamodule<a class="headerlink" href="#lightning-datamodule" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>this part is still in work in progress and mainly support for internal
+TerrIa project.</p>
+</div>
+<p>When using datapipe and dataloader in pytorch it’s common to have
+a datapipe (or dataset) and associated dataloader for each of the
+train|val|test part of the data. Pytorch lightning offer a datamodule
+API which ease the manipulation of this three associated dataloader
+in one class.</p>
+<p>Eotrochloader has dedicated daamodule to made use of gegraphical fold
+more simple.</p>
+<p>First import the eotorchloader datamodule</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eotorchloader.datamodule.terria</span> <span class="kn">import</span> <span class="n">TerriaDataModule</span>
+</pre></div>
+</div>
+<p>Then write a dictionnary with the fold structure of your data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>as test ground truth is not available for INRIA dataset we test
+datamodule functionnality in kfold mode with a fold by town in
+the train data.</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">INRIA</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><p>The INRIA train data are available on 5 distinct geographical
+area whith 36 images in each area.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inria_train_df</span><span class="p">[</span><span class="s2">&quot;town&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[‘tyrol-w’, ‘chicago’, ‘kitsap’, ‘vienna’, ‘austin’]</p>
+<p>We define a kfold split with 3 town in train, 1 in val and
+1 in test. Here it’s manually define but one could automatize
+this part with some scikit-learn kfold functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fold_config</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="s2">&quot;set_1&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;train&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;kitsap&#39;</span><span class="p">,</span> <span class="s1">&#39;vienna&#39;</span><span class="p">,</span> <span class="s1">&#39;austin&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;chicago&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;test&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;tyrol-w&#39;</span><span class="p">]</span> <span class="p">},</span>
+   <span class="s2">&quot;set_2&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;train&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;vienna&#39;</span><span class="p">,</span> <span class="s1">&#39;austin&#39;</span><span class="p">,</span> <span class="s1">&#39;tyrol-w&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;kitsap&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;test&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;chicago&#39;</span><span class="p">]</span> <span class="p">},</span>
+   <span class="s2">&quot;set_3&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;train&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;austin&#39;</span><span class="p">,</span> <span class="s1">&#39;tyrol-w&#39;</span><span class="p">,</span> <span class="s1">&#39;chicago&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;vienna&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;test&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;kitsap&#39;</span><span class="p">]</span> <span class="p">},</span>
+   <span class="s2">&quot;set_4&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;train&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;tyrol-w&#39;</span><span class="p">,</span> <span class="s1">&#39;chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;kitsap&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;austin&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;test&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;vienna&#39;</span><span class="p">]</span> <span class="p">},</span>
+   <span class="s2">&quot;set_5&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;train&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;chicago&#39;</span><span class="p">,</span> <span class="s1">&#39;kitsap&#39;</span><span class="p">,</span> <span class="s1">&#39;vienna&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;tyrol-w&#39;</span><span class="p">],</span>
+      <span class="s2">&quot;test&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;austin&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></div>
+<p>Then we use the fold config to initialize a datamodule with the set we want
+to use in our training</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kfold_datamodule_3</span> <span class="o">=</span> <span class="n">TerriaDataModule</span><span class="p">(</span>
+   <span class="n">inria_train_df</span><span class="p">,</span>
+   <span class="n">transforms</span> <span class="o">=</span> <span class="n">inria_train_tf</span><span class="p">,</span>
+   <span class="n">img_col</span> <span class="o">=</span> <span class="s2">&quot;img_path&quot;</span><span class="p">,</span>
+   <span class="n">img_bands</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+   <span class="n">mask_col</span> <span class="o">=</span> <span class="s2">&quot;msk_path&quot;</span><span class="p">,</span>
+   <span class="n">mask_bands</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+   <span class="n">group_col</span> <span class="o">=</span> <span class="s2">&quot;town&quot;</span><span class="p">,</span>
+   <span class="n">set_config</span> <span class="o">=</span> <span class="n">fold_config</span><span class="p">[</span><span class="s2">&quot;fold_3&quot;</span><span class="p">],</span>
+   <span class="n">tile_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+   <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And it could be used as standard pytorch lightning module. For exemple
+to display a batch of training data :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kfold_datamodule_3</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="n">pl_train_loader</span> <span class="o">=</span> <span class="n">kfold_datamodule_3</span><span class="o">.</span><span class="n">train_dataloader</span><span class="p">()</span>
+<span class="n">test_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">pl_train_loader</span><span class="p">))</span>
+<span class="n">view_batch</span><span class="p">(</span><span class="n">test_batch</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">transforms</span> <span class="o">=</span> <span class="n">display_b_tf_list</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
