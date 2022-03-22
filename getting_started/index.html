@@ -188,6 +188,23 @@
    Display samples/patch
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dataloader-and-datamodule">
+   Dataloader and datamodule
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dataloader">
+     Dataloader
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#lightning-datamodule">
+     Lightning datamodule
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
 </nav>
@@ -504,6 +521,41 @@ results we need to had two additionals tranforms before the last display transfo
 <span class="n">view_patch</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">transforms</span><span class="o">=</span><span class="n">display_b_tf_list</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="dataloader-and-datamodule">
+<h2>Dataloader and datamodule<a class="headerlink" href="#dataloader-and-datamodule" title="Permalink to this headline">¶</a></h2>
+<p>EoTorchLoader dataset could also be use with pytorch Dataloader or pytroch lightning datamodule.</p>
+<section id="dataloader">
+<h3>Dataloader<a class="headerlink" href="#dataloader" title="Permalink to this headline">¶</a></h3>
+<p>Using it with a pytroch dataloader is simple and follow the standard dataset/dataloader code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="n">inria_train_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset_tile_b</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then the dataloader could be use in your training loop</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span>
+   <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">inria_train_dataloader</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;patch Image loader&quot;</span><span class="p">,</span>
+   <span class="n">bar_format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{l_bar}{bar}</span><span class="s1">| </span><span class="si">{n_fmt}</span><span class="s1">/</span><span class="si">{total_fmt}</span><span class="s1"> [</span><span class="si">{elapsed}</span><span class="s1">]&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+
+   <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">inria_train_dataloader</span><span class="p">:</span>
+      <span class="n">images</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span>
+      <span class="n">masks</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span>
+      <span class="c1"># DO SOMETHING TO TRAIN THE MODEL ..</span>
+      <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>eotorchloader offer also basic display function to display batch of data</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eotorchloader.display.matplotlib</span> <span class="kn">import</span> <span class="n">view_patch</span><span class="p">,</span> <span class="n">view_batch</span>
+<span class="n">test_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">inria_train_dataloader</span><span class="p">))</span>
+<span class="n">view_batch</span><span class="p">(</span><span class="n">test_batch</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">transforms</span> <span class="o">=</span> <span class="n">display_b_tf_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="lightning-datamodule">
+<h3>Lightning datamodule<a class="headerlink" href="#lightning-datamodule" title="Permalink to this headline">¶</a></h3>
+</section>
 </section>
 </section>
 
