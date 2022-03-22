@@ -398,23 +398,45 @@ Common EO transforms are  available in eotorchloader.transform</p>
 <li><p>on grayscale uint8 format for mask data. With 0 == nobuilding and 255 == building.
 We transfom this also into float tensor between [0-1] range with 1.0 == building.</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># transforms for training</span>
-<span class="n">inria_train_tf</span> <span class="o">=</span> <span class="p">[</span>
-   <span class="n">ScaleImageToFloat</span><span class="p">(</span><span class="n">scale_factor</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inria_train_tf</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="n">ScaleImageToFloat</span><span class="p">(</span><span class="n">scale_factor</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">img_only</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
    <span class="n">ToTorchTensor</span><span class="p">()</span>
 <span class="p">]</span>
 
 <span class="n">train_dataset_tile_b</span> <span class="o">=</span> <span class="n">LargeImageDataset</span><span class="p">(</span>
-     <span class="n">image_files</span><span class="o">=</span><span class="n">image_files_train</span><span class="p">,</span>
-     <span class="n">mask_files</span><span class="o">=</span><span class="n">mask_files_train</span><span class="p">,</span>
-     <span class="n">tile_size</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
-     <span class="n">transforms</span><span class="o">=</span><span class="n">inria_train_tf</span><span class="p">,</span>
-     <span class="n">image_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
-     <span class="n">mask_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+   <span class="n">image_files</span><span class="o">=</span><span class="n">image_files_train</span><span class="p">,</span>
+   <span class="n">mask_files</span><span class="o">=</span><span class="n">mask_files_train</span><span class="p">,</span>
+   <span class="n">tile_size</span> <span class="o">=</span> <span class="mi">384</span><span class="p">,</span>
+   <span class="n">transforms</span><span class="o">=</span><span class="n">inria_train_tf</span><span class="p">,</span>
+   <span class="n">image_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+   <span class="n">mask_bands</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><p>Todo</p>
 </div></div>
+<p>We could see that the sample is now compose of pytorch float Tensor with value between [0-1].
+The following tests</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_idx</span> <span class="o">=</span> <span class="mi">240</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">train_dataset_tile_b</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; keys : </span><span class="si">{</span><span class="n">test_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">img_shape</span> <span class="o">=</span>  <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">msk_shape</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; image shape : </span><span class="si">{</span><span class="n">img_shape</span><span class="si">}</span><span class="s2">, mask shape : </span><span class="si">{</span><span class="n">msk_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; mask type : </span><span class="si">{</span><span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>should display :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">keys</span> <span class="p">:</span> <span class="n">dict_keys</span><span class="p">([</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">])</span>
+<span class="n">image</span> <span class="n">shape</span> <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">]),</span> <span class="n">mask</span> <span class="n">shape</span> <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">])</span>
+<span class="n">mask</span> <span class="nb">type</span> <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+<span class="n">image</span> <span class="nb">min</span> <span class="mf">0.0</span> <span class="nb">max</span> <span class="p">:</span> <span class="mf">0.992</span>
+<span class="n">mask</span> <span class="n">histogram</span> <span class="n">torch</span><span class="o">.</span><span class="n">return_types</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+<span class="n">hist</span><span class="o">=</span><span class="n">tensor</span><span class="p">([</span><span class="mf">144520.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>
+            <span class="mf">0.</span><span class="p">,</span>      <span class="mf">0.</span><span class="p">,</span>   <span class="mf">2936.</span><span class="p">]),</span>
+<span class="n">bin_edges</span><span class="o">=</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0000</span><span class="p">,</span> <span class="mf">0.0909</span><span class="p">,</span> <span class="mf">0.1818</span><span class="p">,</span> <span class="mf">0.2727</span><span class="p">,</span> <span class="mf">0.3636</span><span class="p">,</span> <span class="mf">0.4545</span><span class="p">,</span> <span class="mf">0.5455</span><span class="p">,</span> <span class="mf">0.6364</span><span class="p">,</span> <span class="mf">0.7273</span><span class="p">,</span>
+      <span class="mf">0.8182</span><span class="p">,</span> <span class="mf">0.9091</span><span class="p">,</span> <span class="mf">1.0000</span><span class="p">]))</span>
+</pre></div>
+</div>
 </section>
 <section id="display-samples-patch">
 <h2>Display samples/patch<a class="headerlink" href="#display-samples-patch" title="Permalink to this headline">¶</a></h2>
@@ -427,7 +449,59 @@ display function (and after the dataset transforms)</p>
 sample data</p>
 <p>Import display functions</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eotorchloader.transform.display</span> <span class="kn">import</span> <span class="n">ToRgbDisplay</span>
+<span class="kn">from</span> <span class="nn">eotorchloader.transform.tensor</span> <span class="kn">import</span> <span class="n">CHW_to_HWC</span>
 <span class="kn">from</span> <span class="nn">eotorchloader.display.matplotlib</span> <span class="kn">import</span> <span class="n">view_patch</span><span class="p">,</span> <span class="n">view_batch</span>
+</pre></div>
+</div>
+<p>To display data with matplotlib we should :</p>
+<ul class="simple">
+<li><p>convert image data from channel first order (CHW) to channel last order (HWC)</p></li>
+<li><p>convert mask/grayscale image to RVB data with a colormap/lut table.</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">INRIA</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><p>Inria input data are on grayscale uint8 format for mask data.
+With 0 == nobuilding and 255 == building. We convert this values
+to some RVB color with a LUT of shape (4, 2)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inria_lut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+   <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span>  <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> <span class="c1"># white</span>
+   <span class="p">[</span>  <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">]</span>  <span class="c1"># pink</span>
+<span class="p">])</span>
+<span class="n">display_patch_transform</span> <span class="o">=</span> <span class="n">ToRgbDisplay</span><span class="p">(</span><span class="n">lut</span><span class="o">=</span><span class="n">inria_lut</span><span class="p">,</span> <span class="n">flatten_mask</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p>Next we add a CHW to HWC transform before the ToRgbDisplay transform.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">channel_last_transform</span> <span class="o">=</span> <span class="n">CHW_to_HWC</span><span class="p">(</span><span class="n">img_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">display_tf_list</span><span class="o">=</span> <span class="p">[</span>
+   <span class="n">channel_last_transform</span><span class="p">,</span>
+   <span class="n">display_patch_transform</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And finally we call the view_patch function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_data</span> <span class="o">=</span> <span class="n">train_dataset_tile</span><span class="p">[</span><span class="mi">142</span><span class="p">]</span>
+<span class="n">view_patch</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">transforms</span><span class="o">=</span><span class="n">display_tf_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/view_patch_inria_a.jpg"><img alt="Example of RGB patch on INRIA dataset" class="align-center" src="../_images/view_patch_inria_a.jpg" style="width: 650px;" /></a>
+<p>To display the same tensor as the ones use on training input, or to display val/prediction
+results we need to had two additionals tranforms before the last display transforms :</p>
+<ul class="simple">
+<li><p>a transform to convert from pytorch tensor to numpy</p></li>
+<li><p>a transform to pass from [0-1] float image to [0-255] Bytes. (depend on plotting backend)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eotorchloader.transform.scale</span> <span class="kn">import</span> <span class="n">FloatImageToByte</span>
+<span class="kn">from</span> <span class="nn">eotorchloader.transform.tensor</span> <span class="kn">import</span> <span class="n">TensorToArray</span><span class="p">,</span> <span class="n">CHW_to_HWC</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">display_b_tf_list</span><span class="o">=</span> <span class="p">[</span>
+   <span class="n">TensorToArray</span><span class="p">(),</span>
+   <span class="n">FloatImageToByte</span><span class="p">(</span><span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">img_only</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+   <span class="n">channel_last_transform</span><span class="p">,</span>
+   <span class="n">display_patch_transform</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_data</span> <span class="o">=</span> <span class="n">train_dataset_tile_b</span><span class="p">[</span><span class="mi">144</span><span class="p">]</span>
+<span class="n">view_patch</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">transforms</span><span class="o">=</span><span class="n">display_b_tf_list</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
