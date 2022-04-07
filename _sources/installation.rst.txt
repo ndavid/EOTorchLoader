@@ -17,7 +17,12 @@ Installing EOTorchLoader
 From PyPI
 =========
 
-TODO no packaging done yet
+.. code-block:: bash
+
+   pip install EOTorchLoader
+
+
+see https://pypi.org/project/EOTorchLoader/
 
 
 From conda-forge

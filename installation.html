@@ -8,31 +8,28 @@
 
     <title>Installation Guide &#8212; EOTorchLoader 0.1 documentation</title>
     
-    <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 <link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-  
+
     
-    <link rel="stylesheet"
-      href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-      href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-      href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
-  
-    
-      
-  
-    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/pydata-sphinx-theme.css" />
     <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/getting_started.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/eotorch.css" />
     
-    <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
-  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -49,7 +46,7 @@
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
     
     <div class="container-fluid" id="banner"></div>
 
@@ -156,7 +153,7 @@
               
               <div class="toc-item">
                 
-<div class="tocsection onthispage pt-5 pb-3">
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
     <i class="fas fa-list"></i> On this page
 </div>
 
@@ -233,31 +230,34 @@
               <div>
                 
   <section id="installation-guide">
-<span id="installation"></span><h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
+<span id="installation"></span><h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">#</a></h1>
 <section id="python-version-support">
-<h2>Python version support<a class="headerlink" href="#python-version-support" title="Permalink to this headline">¶</a></h2>
+<h2>Python version support<a class="headerlink" href="#python-version-support" title="Permalink to this headline">#</a></h2>
 <p>Officially Python 3.8, 3.9 and 3.10.</p>
 </section>
 <section id="installing-eotorchloader">
-<h2>Installing EOTorchLoader<a class="headerlink" href="#installing-eotorchloader" title="Permalink to this headline">¶</a></h2>
+<h2>Installing EOTorchLoader<a class="headerlink" href="#installing-eotorchloader" title="Permalink to this headline">#</a></h2>
 <section id="from-pypi">
-<h3>From PyPI<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h3>
-<p>TODO no packaging done yet</p>
+<h3>From PyPI<a class="headerlink" href="#from-pypi" title="Permalink to this headline">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install EOTorchLoader
+</pre></div>
+</div>
+<p>see <a class="reference external" href="https://pypi.org/project/EOTorchLoader/">https://pypi.org/project/EOTorchLoader/</a></p>
 </section>
 <section id="from-conda-forge">
-<h3>From conda-forge<a class="headerlink" href="#from-conda-forge" title="Permalink to this headline">¶</a></h3>
+<h3>From conda-forge<a class="headerlink" href="#from-conda-forge" title="Permalink to this headline">#</a></h3>
 <p>TODO no packaging done yet</p>
 </section>
 <section id="from-github">
-<h3>From GitHub<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h3>
+<h3>From GitHub<a class="headerlink" href="#from-github" title="Permalink to this headline">#</a></h3>
 <section id="option-1-as-a-part-of-your-system-wide-module">
-<h4>Option 1 (as a part of your system-wide module):<a class="headerlink" href="#option-1-as-a-part-of-your-system-wide-module" title="Permalink to this headline">¶</a></h4>
+<h4>Option 1 (as a part of your system-wide module):<a class="headerlink" href="#option-1-as-a-part-of-your-system-wide-module" title="Permalink to this headline">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/ndavid/EOTorchLoader#egg<span class="o">=</span>eotorchloader
 </pre></div>
 </div>
 </section>
 <section id="option-2-editable-installation">
-<h4>Option 2 (editable installation):<a class="headerlink" href="#option-2-editable-installation" title="Permalink to this headline">¶</a></h4>
+<h4>Option 2 (editable installation):<a class="headerlink" href="#option-2-editable-installation" title="Permalink to this headline">#</a></h4>
 <p>To install an editable version of EOTorchLoader, it is recommended to clone the codebase directly:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/ndavid/EOTorchLoader.git
 </pre></div>
@@ -278,11 +278,11 @@ and the codebase is ready to use.</p>
 </section>
 </section>
 <section id="validating-the-install">
-<h2>Validating the install<a class="headerlink" href="#validating-the-install" title="Permalink to this headline">¶</a></h2>
+<h2>Validating the install<a class="headerlink" href="#validating-the-install" title="Permalink to this headline">#</a></h2>
 <p>TODO</p>
 </section>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">#</a></h2>
 </section>
 </section>
 
@@ -314,8 +314,9 @@ and the codebase is ready to use.</p>
       </div>
     </div>
   
-    <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
-  <footer class="footer mt-5 mt-md-0">
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+<footer class="footer mt-5 mt-md-0">
   <div class="container">
     
     <div class="footer-item">
@@ -326,7 +327,7 @@ and the codebase is ready to use.</p>
     
     <div class="footer-item">
       <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
 </p>
     </div>
     
